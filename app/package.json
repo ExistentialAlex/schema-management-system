@@ -73,6 +73,6 @@
     "vite-plugin-vue-layouts": "0.11.0",
     "vitest": "4.0.17",
     "vue-router-mock": "2.0.0",
-    "vue-tsc": "3.2.2"
+    "vue-tsc": "3.2.3"
   }
 }
