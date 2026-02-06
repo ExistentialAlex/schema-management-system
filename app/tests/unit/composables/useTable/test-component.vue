@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { UserSchema } from '<project-name>-schemas';
 import type { DropdownMenuItem, TableColumn } from '@nuxt/ui';
+import type { UserSchema } from 'schema-manager-schemas';
 import { definePage } from 'unplugin-vue-router/runtime';
 import { useI18n } from 'vue-i18n';
 import PaginatedTable from '@/components/paginated-table.vue';
@@ -62,7 +62,7 @@ const { pageSize, sort, data, isPending, pageSizeItems } = usePagination<UserSch
       :page-size-items="pageSizeItems"
       :columns="columns"
       :loading="isPending"
-      data-testid="<project-name>-table"
+      data-testid="schema-manager-table"
     />
   </div>
 </template>

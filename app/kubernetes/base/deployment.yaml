@@ -2,17 +2,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: <platform-team-name>-app
+  name: schema-manager-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: <platform-team-name>-app
+      app: schema-manager-app
   template:
     metadata:
       annotations:
       labels:
-        app: <platform-team-name>-app
+        app: schema-manager-app
     spec:
       topologySpreadConstraints:
         - maxSkew: 1
@@ -20,26 +20,26 @@ spec:
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app: <platform-team-name>
+              app: schema-manager
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app: <platform-team-name>-app
+              app: schema-manager-app
       volumes:
-        - name: <platform-team-name>-config-volume
+        - name: schema-manager-config-volume
           configMap:
-            name: <platform-team-name>-configmap
+            name: schema-manager-configmap
       containers:
-        - name: <platform-team-name>-app
-          image: europe-west1-docker.pkg.dev/uk-cti-adtech-platform-test/<platform-team-name>/<platform-team-name>-app:${GIT_TAG}
+        - name: schema-manager-app
+          image: europe-west1-docker.pkg.dev/uk-cti-adtech-platform-test/schema-manager/schema-manager-app:${GIT_TAG}
           imagePullPolicy: Always
           ports:
             - name: app
               containerPort: 80
           volumeMounts:
-            - name: <platform-team-name>-config-volume
+            - name: schema-manager-config-volume
               mountPath: /usr/share/nginx/html/config.json
               subPath: config.json
           resources:

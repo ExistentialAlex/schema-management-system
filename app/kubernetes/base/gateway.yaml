@@ -2,7 +2,7 @@
 apiVersion: launchpad.sky.uk/v1alpha1
 kind: Gateway
 metadata:
-  name: <platform-team-name>-app
+  name: schema-manager-app
 spec:
   realms:
     - name: ping
@@ -10,10 +10,10 @@ spec:
       allowInternet: false
       allowOnPrem: true
       routes:
-        - path: / # https://<platform-team-name>-app.internal.test.adtechplatform.sky.com/
+        - path: / # https://schema-manager-app.internal.test.adtechplatform.sky.com/
           methods:
             - GET
 
   services:
-    - name: <platform-team-name>-app
+    - name: schema-manager-app
       port: 80

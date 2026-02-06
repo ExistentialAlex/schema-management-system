@@ -1,21 +1,21 @@
-AWS_GITHUB_PWD_SECRET_NAME = /concourse/<platform-team-name>/github_pat
-AWS_GITHUB_WEBHOOK_TOKEN_NAME = /concourse/<platform-team-name>/<project-name>-app-webhook-token
+AWS_GITHUB_PWD_SECRET_NAME = /concourse/schema-manager/github_pat
+AWS_GITHUB_WEBHOOK_TOKEN_NAME = /concourse/schema-manager/schema-manager-app-webhook-token
 AWS_REGION ?= eu-west-1
 
 build: docker-compose
 	docker-compose build concourse-setup
 
 concourse-login:
-	fly login -t <platform-team-name> --team-name <platform-team-name> --concourse-url https://concourse.at.sky
+	fly login -t schema-manager --team-name schema-manager --concourse-url https://concourse.at.sky
 	
 concourse-apply-pipeline: docker-compose
-	docker-compose run --rm concourse-setup bash -c 'fly -t <platform-team-name> set-pipeline --pipeline <project-name>-app-generator --config ./ci/pipelines/pipeline_generator.yaml -n && fly -t <platform-team-name>  unpause-pipeline  --pipeline <project-name>-app-generator'
+	docker-compose run --rm concourse-setup bash -c 'fly -t schema-manager set-pipeline --pipeline schema-manager-app-generator --config ./ci/pipelines/pipeline_generator.yaml -n && fly -t schema-manager  unpause-pipeline  --pipeline schema-manager-app-generator'
 
 concourse-apply-pr-pipeline: docker-compose
-	docker-compose run --rm concourse-setup bash -c 'fly -t <platform-team-name> set-pipeline --pipeline <project-name>-app-pr --config ./ci/pipelines/check.yaml -n'
+	docker-compose run --rm concourse-setup bash -c 'fly -t schema-manager set-pipeline --pipeline schema-manager-app-pr --config ./ci/pipelines/check.yaml -n'
 
 concourse-apply-deploy-pipeline: docker-compose
-	docker-compose run --rm concourse-setup bash -c 'fly -t <platform-team-name> set-pipeline --pipeline <project-name>-app-deploy --config ./ci/pipelines/deploy.yaml -n'
+	docker-compose run --rm concourse-setup bash -c 'fly -t schema-manager set-pipeline --pipeline schema-manager-app-deploy --config ./ci/pipelines/deploy.yaml -n'
 
 aws-create-git-token: docker-compose
 	@read -p "Enter Github bot user PAT token for svc-adtech-cicd-bot account:" secret_value; \

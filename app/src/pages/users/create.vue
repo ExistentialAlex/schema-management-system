@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import type { CreateUser } from '<project-name>-schemas';
-import { CreateUserSchema } from '<project-name>-schemas';
+import type { CreateUser } from 'schema-manager-schemas';
+import { CreateUserSchema } from 'schema-manager-schemas';
 import { definePage } from 'unplugin-vue-router/runtime';
 import { reactive, useTemplateRef } from 'vue';
 import { useI18n } from 'vue-i18n';

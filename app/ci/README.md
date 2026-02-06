@@ -1,4 +1,4 @@
-# <project-name>-ui CI/CD
+# schema-manager-ui CI/CD
 
 ## CI and Deployment
 

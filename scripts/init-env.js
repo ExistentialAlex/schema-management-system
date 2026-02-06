@@ -9,7 +9,7 @@ const bffEnvFile = join(__dirname, '../server/.env');
 const main = () => {
   console.log('Initialising .env file 🚧');
 
-  if (bffEnvFile) {
+  if (existsSync(bffEnvFile)) {
     console.log('➡️ .env file already initialised, skipping.')
     return;
   }
