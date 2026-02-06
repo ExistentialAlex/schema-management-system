@@ -1,4 +1,4 @@
-# <project-name>-server CI/CD
+# schema-manager-server CI/CD
 
 ## CI and Deployment Description
 

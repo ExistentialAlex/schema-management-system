@@ -6,15 +6,15 @@ resource_types:
       tag: v0.16.2
       username: _json_key
       password: |
-        ((<platform-keyfile-name>.keyfile))
+        ((schema-manager-keyfile.keyfile))
 
 resources:
-  - name: <project-name>-server
+  - name: schema-manager-server
     type: git
     icon: github
-    webhook_token: ((<project-name>-server-webhook-token))
+    webhook_token: ((schema-manager-server-webhook-token))
     source:
-      uri: https://github.com/sky-uk/<repository-name>.git
+      uri: https://github.com/sky-uk/schema-manager.git
       branch: main
       fetch_tags: true
       username: svc-adtech-cicd-bot
@@ -57,56 +57,56 @@ jobs:
     on_error: *slack_failure_update
     on_success: *slack_success_update
     plan:
-      - get: <project-name>-server
+      - get: schema-manager-server
         trigger: true
       - task: tag
-        file: <project-name>-server/server/ci/pipelines/tasks/tag.yaml
+        file: schema-manager-server/server/ci/pipelines/tasks/tag.yaml
         vars:
-          repo_name: <project-name>-server
+          repo_name: schema-manager-server
           pat_token: ((github_pat))
       - load_var: tag
-        file: <project-name>-server/tag.txt
+        file: schema-manager-server/tag.txt
         reveal: true
-      - put: <project-name>-server
+      - put: schema-manager-server
         params:
-          repository: <project-name>-server
+          repository: schema-manager-server
       - task: set-build-version
-        file: <project-name>-server/server/ci/pipelines/tasks/set-build-version.yaml
+        file: schema-manager-server/server/ci/pipelines/tasks/set-build-version.yaml
         vars:
-          repo_name: <project-name>-server
+          repo_name: schema-manager-server
           version: ((.:tag))
       - task: docker-build
         privileged: true
-        file: <project-name>-server/server/ci/pipelines/tasks/build-image.yaml
+        file: schema-manager-server/server/ci/pipelines/tasks/build-image.yaml
         vars:
-          repo_name: <project-name>-server
-          context: <project-name>-server
+          repo_name: schema-manager-server
+          context: schema-manager-server
           target: server
       - task: docker-push
-        file: <project-name>-server/server/ci/pipelines/tasks/push-image.yaml
+        file: schema-manager-server/server/ci/pipelines/tasks/push-image.yaml
         vars:
-          repo_name: <project-name>-server
-          google_json_credentials: ((<platform-keyfile-name>.keyfile))
-          target_image: europe-west1-docker.pkg.dev/uk-cti-adtech-platform-test/<platform-team-name>/<platform-team-name>-server
+          repo_name: schema-manager-server
+          google_json_credentials: ((schema-manager-keyfile.keyfile))
+          target_image: europe-west1-docker.pkg.dev/uk-cti-adtech-platform-test/schema-manager/schema-manager-server
       - task: deploy-to-test
         privileged: true
-        file: <project-name>-server/server/ci/pipelines/tasks/run-make.yaml
+        file: schema-manager-server/server/ci/pipelines/tasks/run-make.yaml
         vars:
-          repo_name: <project-name>-server
+          repo_name: schema-manager-server
           gcp_sa_name: concourse-ui-bff@grp-cti-adtech-adf-test.iam.gserviceaccount.com
           git_tag: ((.:tag))
           target_env: test
           make_target: deploy-server
-          gcp_sa_key_secret_path: ((<platform-keyfile-name>.keyfile))
+          gcp_sa_key_secret_path: ((schema-manager-keyfile.keyfile))
           github_pat_token_secret_name: ((github_pat))
       - task: stubbed-promote-to-stage
         privileged: true
-        file: <project-name>-server/server/ci/pipelines/tasks/run-tests.yaml
+        file: schema-manager-server/server/ci/pipelines/tasks/run-tests.yaml
         vars:
-          repo_name: <project-name>-server
+          repo_name: schema-manager-server
           gcp_sa_name: concourse-ui-bff@grp-cti-adtech-adf-test.iam.gserviceaccount.com
           git_tag: ((.:tag))
           target_env: test
           make_target: mock-command
-          gcp_sa_key_secret_path: ((<platform-keyfile-name>.keyfile))
+          gcp_sa_key_secret_path: ((schema-manager-keyfile.keyfile))
           github_pat_token_secret_name: ((github_pat))

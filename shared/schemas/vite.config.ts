@@ -9,7 +9,7 @@ export default mergeConfig(
     build: {
       lib: {
         entry: resolve(__dirname, 'src/index.ts'),
-        name: '<project-name>_schemas',
+        name: 'schema-manager_schemas',
       },
       // Rollup conf
       rollupOptions: {

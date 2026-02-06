@@ -2,12 +2,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: <platform-team-name>-app
+  name: schema-manager-app
 spec:
   template:
     metadata:
       annotations:
     spec:
       containers:
-        - name: <platform-team-name>-app
-          image: europe-west1-docker.pkg.dev/uk-cti-adtech-platform-prod/<platform-team-name>/<platform-team-name>-app:${GIT_TAG}
+        - name: schema-manager-app
+          image: europe-west1-docker.pkg.dev/uk-cti-adtech-platform-prod/schema-manager/schema-manager-app:${GIT_TAG}

@@ -1,5 +1,5 @@
-import type { MessageSchema } from '<project-name>-i18n';
-import type { ShapeOf } from '<project-name>-types';
+import type { MessageSchema } from 'schema-manager-i18n';
+import type { ShapeOf } from 'schema-manager-types';
 import path from 'node:path';
 
 export const i18nFixture = async (locale: string | undefined) => {

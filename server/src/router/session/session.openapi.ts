@@ -1,5 +1,5 @@
-import { UserSessionSchema } from '<project-name>-schemas';
 import { describeRoute, resolver } from 'hono-openapi';
+import { UserSessionSchema } from 'schema-manager-schemas';
 import z from 'zod';
 
 /**

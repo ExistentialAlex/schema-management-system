@@ -1,6 +1,6 @@
 <script lang="ts" setup generic="T extends TableData">
-import type { ColumnSort } from '<project-name>-types';
 import type { TableColumn, TableData } from '@nuxt/ui';
+import type { ColumnSort } from 'schema-manager-types';
 
 defineProps<IPaginatedTableProps<T>>();
 const search = defineModel<string>('search', { required: true });

@@ -1,4 +1,4 @@
-import type { StandardSchemaValidationError } from '<project-name>-types';
+import type { StandardSchemaValidationError } from 'schema-manager-types';
 import { FetchError } from 'ofetch';
 
 /**

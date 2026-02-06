@@ -1,4 +1,4 @@
-import type { User, UserSession } from '<project-name>-types';
+import type { User, UserSession } from 'schema-manager-types';
 import type { ComputedRef, Ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';

@@ -7,81 +7,81 @@ resource_types:
       tag: 1.4.2
       username: _json_key
       password: |
-        ((<platform-keyfile-name>.keyfile))
+        ((schema-manager-keyfile.keyfile))
 
 resources:
-  - name: <project-name>-app
+  - name: schema-manager-app
     type: git
     icon: github
-    webhook_token: ((<project-name>-app-webhook-token))
+    webhook_token: ((schema-manager-app-webhook-token))
     source:
-      uri: https://github.com/sky-uk/<repository-name>
+      uri: https://github.com/sky-uk/schema-manager
       paths:
         - app
       branch: main
       fetch_tags: true
       username: svc-adtech-cicd-bot
       password: ((github_pat))
-  - name: <project-name>-app-webhook
+  - name: schema-manager-app-webhook
     type: github-webhook-resource
     source:
       github_api: https://api.github.com
       github_token: ((github_pat))
-  - name: <project-name>-app-pr-webhook
+  - name: schema-manager-app-pr-webhook
     type: github-webhook-resource
     source:
       github_api: https://api.github.com
       github_token: ((github_pat))
-  - name: <project-name>-app-self-webhook
+  - name: schema-manager-app-self-webhook
     type: github-webhook-resource
     source:
       github_api: https://api.github.com
       github_token: ((github_pat))
 
 jobs:
-  - name: <project-name>-app-set-self
+  - name: schema-manager-app-set-self
     plan:
-      - get: <project-name>-app
+      - get: schema-manager-app
         trigger: true
-      - set_pipeline: <project-name>-app-generator
-        file: <project-name>-app/app/ci/pipelines/pipeline_generator.yaml
+      - set_pipeline: schema-manager-app-generator
+        file: schema-manager-app/app/ci/pipelines/pipeline_generator.yaml
       - put: create-webhook
-        resource: <project-name>-app-self-webhook
+        resource: schema-manager-app-self-webhook
         params:
           org: sky-uk
-          repo: <repository-name>
-          resource_name: <project-name>-app
-          webhook_token: ((<project-name>-app-webhook-token))
+          repo: schema-manager
+          resource_name: schema-manager-app
+          webhook_token: ((schema-manager-app-webhook-token))
           operation: create
           events: [push]
-          pipeline: <project-name>-app-generator
+          pipeline: schema-manager-app-generator
 
-  - name: <project-name>-app-pipelines
+  - name: schema-manager-app-pipelines
     plan:
-      - get: <project-name>-app
+      - get: schema-manager-app
         trigger: true
-        passed: [<project-name>-app-set-self]
-      - set_pipeline: <project-name>-app-pr
-        file: <project-name>-app/app/ci/pipelines/check.yaml
-      - set_pipeline: <project-name>-app-deploy
-        file: <project-name>-app/app/ci/pipelines/deploy.yaml
+        passed: [schema-manager-app-set-self]
+      - set_pipeline: schema-manager-app-pr
+        file: schema-manager-app/app/ci/pipelines/check.yaml
+      - set_pipeline: schema-manager-app-deploy
+        file: schema-manager-app/app/ci/pipelines/deploy.yaml
       - put: create-webhook
-        resource: <project-name>-app-webhook
+        resource: schema-manager-app-webhook
         params:
           org: sky-uk
-          repo: <repository-name>
-          resource_name: <project-name>-app
-          webhook_token: ((<project-name>-app-webhook-token))
+          repo: schema-manager
+          resource_name: schema-manager-app
+          webhook_token: ((schema-manager-app-webhook-token))
           operation: create
           events: [push]
-          pipeline: <project-name>-app-deploy
+          pipeline: schema-manager-app-deploy
       - put: create-webhook-pr
-        resource: <project-name>-app-pr-webhook
+        resource: schema-manager-app-pr-webhook
         params:
           org: sky-uk
-          repo: <repository-name>
-          resource_name: <project-name>-app-pr
-          webhook_token: ((<project-name>-app-webhook-token))
+          repo: schema-manager
+          resource_name: schema-manager-app-pr
+          webhook_token: ((schema-manager-app-webhook-token))
           operation: create
           events: [pull_request]
-          pipeline: <project-name>-app-pr
+          pipeline: schema-manager-app-pr

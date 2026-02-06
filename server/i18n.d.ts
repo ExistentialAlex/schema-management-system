@@ -1,4 +1,4 @@
-import type { MessageSchema } from '<project-name>-i18n';
+import type { MessageSchema } from 'schema-manager-i18n';
 
 declare module '@intlify/hono' {
   // extend `DefineLocaleMessage` with `ResourceSchema`

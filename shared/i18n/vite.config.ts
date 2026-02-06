@@ -8,7 +8,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: '<project-name>_i18n',
+      name: 'schema-manager_i18n',
     },
     // Rollup conf
     rollupOptions: {

@@ -7,81 +7,81 @@ resource_types:
       tag: 1.4.2
       username: _json_key
       password: |
-        ((<platform-keyfile-name>.keyfile))
+        ((schema-manager-keyfile.keyfile))
 
 resources:
-  - name: <project-name>-server
+  - name: schema-manager-server
     type: git
     icon: github
-    webhook_token: ((<project-name>-server-webhook-token))
+    webhook_token: ((schema-manager-server-webhook-token))
     source:
-      uri: https://github.com/sky-uk/<repository-name>
+      uri: https://github.com/sky-uk/schema-manager
       paths:
         - server
       branch: main
       fetch_tags: true
       username: svc-adtech-cicd-bot
       password: ((github_pat))
-  - name: <project-name>-server-webhook
+  - name: schema-manager-server-webhook
     type: github-webhook-resource
     source:
       github_api: https://api.github.com
       github_token: ((github_pat))
-  - name: <project-name>-server-pr-webhook
+  - name: schema-manager-server-pr-webhook
     type: github-webhook-resource
     source:
       github_api: https://api.github.com
       github_token: ((github_pat))
-  - name: <project-name>-server-self-webhook
+  - name: schema-manager-server-self-webhook
     type: github-webhook-resource
     source:
       github_api: https://api.github.com
       github_token: ((github_pat))
 
 jobs:
-  - name: <project-name>-server-set-self
+  - name: schema-manager-server-set-self
     plan:
-      - get: <project-name>-server
+      - get: schema-manager-server
         trigger: true
-      - set_pipeline: <project-name>-server-generator
-        file: <project-name>-server/server/ci/pipelines/pipeline_generator.yaml
+      - set_pipeline: schema-manager-server-generator
+        file: schema-manager-server/server/ci/pipelines/pipeline_generator.yaml
       - put: create-webhook
-        resource: <project-name>-server-self-webhook
+        resource: schema-manager-server-self-webhook
         params:
           org: sky-uk
-          repo: <repository-name>
-          resource_name: <project-name>-server
-          webhook_token: ((<project-name>-server-webhook-token))
+          repo: schema-manager
+          resource_name: schema-manager-server
+          webhook_token: ((schema-manager-server-webhook-token))
           operation: create
           events: [push]
-          pipeline: <project-name>-server-generator
+          pipeline: schema-manager-server-generator
 
-  - name: <project-name>-server-pipelines
+  - name: schema-manager-server-pipelines
     plan:
-      - get: <project-name>-server
+      - get: schema-manager-server
         trigger: true
-        passed: [<project-name>-server-set-self]
-      - set_pipeline: <project-name>-server-pr
-        file: <project-name>-server/server/ci/pipelines/check.yaml
-      - set_pipeline: <project-name>-server-deploy
-        file: <project-name>-server/server/ci/pipelines/deploy.yaml
+        passed: [schema-manager-server-set-self]
+      - set_pipeline: schema-manager-server-pr
+        file: schema-manager-server/server/ci/pipelines/check.yaml
+      - set_pipeline: schema-manager-server-deploy
+        file: schema-manager-server/server/ci/pipelines/deploy.yaml
       - put: create-webhook
-        resource: <project-name>-server-webhook
+        resource: schema-manager-server-webhook
         params:
           org: sky-uk
-          repo: <repository-name>
-          resource_name: <project-name>-server
-          webhook_token: ((<project-name>-server-webhook-token))
+          repo: schema-manager
+          resource_name: schema-manager-server
+          webhook_token: ((schema-manager-server-webhook-token))
           operation: create
           events: [push]
-          pipeline: <project-name>-server-deploy
+          pipeline: schema-manager-server-deploy
       - put: create-webhook-pr
-        resource: <project-name>-server-pr-webhook
+        resource: schema-manager-server-pr-webhook
         params:
           org: sky-uk
-          repo: <repository-name>
-          resource_name: <project-name>-server-pr
-          webhook_token: ((<project-name>-server-webhook-token))
+          repo: schema-manager
+          resource_name: schema-manager-server-pr
+          webhook_token: ((schema-manager-server-webhook-token))
           operation: create
           events: [pull_request]
-          pipeline: <project-name>-server-pr
+          pipeline: schema-manager-server-pr
