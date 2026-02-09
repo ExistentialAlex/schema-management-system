@@ -1,4 +1,5 @@
 import antfu from '@antfu/eslint-config';
+import unusedImports from 'eslint-plugin-unused-imports';
 import type { FlatConfigComposer } from 'eslint-flat-config-utils';
 
 /**
