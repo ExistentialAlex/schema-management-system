@@ -7,6 +7,7 @@ export type SimplePropertyType = z.infer<typeof SimplePropertyTypeSchema>;
 
 export const SchemaPropertySchema = z.strictObject({
   name: z.string(),
+  description: z.string().optional(),
   type: z.union([z.array(SimplePropertyTypeSchema), z.string()]),
   required: z.boolean(),
   dependsOn: UniqueStringArraySchema.optional(),
