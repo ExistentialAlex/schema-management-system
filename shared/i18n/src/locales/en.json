@@ -122,6 +122,16 @@
           "goBack": "Go back home",
           "contactSupport": "Contact Support"
         }
+      },
+      "schemas": {
+        "create": {
+          "title": "Create Schema",
+          "form": {
+            "title": "Schema Details",
+            "description": "Add some details about your schema below.",
+            "submit": "Create"
+          }
+        }
       }
     },
     "composables": {
@@ -165,6 +175,19 @@
             },
             "onError": {
               "title": "Error Deleting User"
+            }
+          }
+        }
+      },
+      "schemas": {
+        "useCreateSchema": {
+          "toasts": {
+            "onSuccess": {
+              "title": "Schema Created",
+              "description": "Schema '{name}' has been created successfully."
+            },
+            "onError": {
+              "title": "Error Creating Schema"
             }
           }
         }
