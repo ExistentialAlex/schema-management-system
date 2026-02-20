@@ -91,7 +91,7 @@ export const log = (requestId: string, message: string, ...rest: string[]) => {
 };
 
 export const logRequest = (requestId: string, method: string, path: string, ...rest: string[]) => {
-  log(PrefixEnum.Incoming, requestId, method, path, ...rest);
+  log(requestId, PrefixEnum.Incoming, method, path, ...rest);
 };
 
 export const logResponse = (
@@ -102,7 +102,7 @@ export const logResponse = (
   elapsed: string,
   ...rest: string[]
 ) => {
-  log(PrefixEnum.Outgoing, requestId, method, path, colorStatus(status), elapsed, ...rest);
+  log(requestId, PrefixEnum.Outgoing, method, path, colorStatus(status), elapsed, ...rest);
 };
 
 export const logError = (
@@ -112,7 +112,7 @@ export const logError = (
   status: StatusCode,
   ...rest: string[]
 ) => {
-  log(PrefixEnum.Error, requestId, method, path, colorStatus(status), ...rest);
+  log(requestId, PrefixEnum.Error, method, path, colorStatus(status), ...rest);
 };
 
 export const logExternalRequest = (
@@ -121,7 +121,7 @@ export const logExternalRequest = (
   path: string,
   ...rest: string[]
 ) => {
-  log(PrefixEnum.Outgoing, requestId, method, path, ...rest);
+  log(requestId, PrefixEnum.Outgoing, method, path, ...rest);
 };
 
 export const logExternalResponse = (
@@ -131,7 +131,7 @@ export const logExternalResponse = (
   status: StatusCode,
   ...rest: string[]
 ) => {
-  log(PrefixEnum.Incoming, requestId, method, path, colorStatus(status), ...rest);
+  log(requestId, PrefixEnum.Incoming, method, path, colorStatus(status), ...rest);
 };
 
 export const logExternalError = (
@@ -141,5 +141,5 @@ export const logExternalError = (
   status: StatusCode,
   ...rest: string[]
 ) => {
-  log(PrefixEnum.Error, requestId, method, path, colorStatus(status), ...rest);
+  log(requestId, PrefixEnum.Error, method, path, colorStatus(status), ...rest);
 };

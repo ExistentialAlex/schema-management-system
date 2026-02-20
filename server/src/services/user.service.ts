@@ -31,7 +31,7 @@ export const useUserService = (c: Context<ServerEnv>) => {
   const reqID = c.get('requestId');
 
   const getUser = (id: number): User => {
-    log(`Getting User with ID '${id}'`, reqID);
+    log(reqID, `Getting User with ID '${id}'`);
 
     if (id === 999) {
       throw new UserGetException(c, { id });
@@ -42,7 +42,7 @@ export const useUserService = (c: Context<ServerEnv>) => {
       throw new UserNotFoundException(c, { id });
     }
 
-    log(`User Found`, reqID);
+    log(reqID, `User Found`);
 
     return user;
   };
@@ -53,12 +53,12 @@ export const useUserService = (c: Context<ServerEnv>) => {
     search?: string,
     sort?: string[] | string,
   ): PaginationResponse<User> => {
-    log('Getting paginated list of users', reqID);
+    log(reqID, 'Getting paginated list of users');
     return convertExternalPaginationResponse(c, paginate(users, page, pageSize, search, sort));
   };
 
   const createUser = (user: CreateUser): User => {
-    log('Creating new user', reqID);
+    log(reqID, 'Creating new user');
 
     const newUser: User = {
       id: users.length + 1,
@@ -66,25 +66,25 @@ export const useUserService = (c: Context<ServerEnv>) => {
     };
     users.push(newUser);
 
-    log('New user created', reqID);
+    log(reqID, 'New user created');
 
     return newUser;
   };
 
   const updateUser = (id: number, user: UpdateUser): User => {
-    log(`Updating user with ID '${id}'`, reqID);
+    log(reqID, `Updating user with ID '${id}'`);
 
     const existingUser = getUser(id);
     const updatedUser = { ...existingUser, ...user };
     users = users.map((u) => (u.id === id ? updatedUser : u));
 
-    log('New user created', reqID);
+    log(reqID, 'New user created');
 
     return updatedUser;
   };
 
   const deleteUser = (id: number) => {
-    log(`Deleting user with ID '${id}'`, reqID);
+    log(reqID, `Deleting user with ID '${id}'`);
 
     const userIndex = users.findIndex((user) => user.id === id);
     if (userIndex === -1) {
@@ -92,7 +92,7 @@ export const useUserService = (c: Context<ServerEnv>) => {
     }
     users.splice(userIndex, 1);
 
-    log('User deleted', reqID);
+    log(reqID, 'User deleted');
 
     return { id };
   };

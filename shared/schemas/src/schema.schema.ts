@@ -1,5 +1,6 @@
 import * as z from 'zod';
 import { NonNegativeIntegerDefault0Schema, NonNegativeIntegerSchema, UniqueStringArraySchema } from './json-schema';
+import { min } from './utils';
 import { isRegex } from './utils/regex';
 
 export const SimplePropertyTypeSchema = z.enum(['array', 'boolean', 'integer', 'null', 'number', 'string']);
@@ -8,7 +9,7 @@ export type SimplePropertyType = z.infer<typeof SimplePropertyTypeSchema>;
 export const SchemaPropertySchema = z.strictObject({
   name: z.string(),
   description: z.string().optional(),
-  type: z.union([z.array(SimplePropertyTypeSchema), z.string()]),
+  type: z.array(z.union([SimplePropertyTypeSchema, z.string()])),
   required: z.boolean(),
   dependsOn: UniqueStringArraySchema.optional(),
 
@@ -31,7 +32,7 @@ export type SchemaProperty = z.infer<typeof SchemaPropertySchema>;
 export const SemverStringSchema = z.string().regex(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-z-][0-9a-z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-z-][0-9a-z-]*))*))?(?:\+([0-9a-z-]+(?:\.[0-9a-z-]+)*))?$/gim);
 export type SemverString = z.infer<typeof SemverStringSchema>;
 
-export const SchemaVersionSchema = z.strictObject({
+export const SchemaVersionSchema = z.object({
   id: SemverStringSchema,
   schemaId: z.number(),
   draft: z.boolean(),
@@ -39,10 +40,20 @@ export const SchemaVersionSchema = z.strictObject({
 });
 export type SchemaVersion = z.infer<typeof SchemaVersionSchema>;
 
-export const SchemaSchema = z.strictObject({
+export const SchemaSchema = z.object({
   id: z.number(),
-  title: z.string(),
-  description: z.string(),
+  title: z.string()
+    .refine(min(1), {
+      params: {
+        i18n: 'schemas.SchemaSchema.title.min',
+      },
+    }),
+  description: z.string()
+    .refine(min(1), {
+      params: {
+        i18n: 'schemas.SchemaSchema.description.min',
+      },
+    }),
   versions: z.array(SchemaVersionSchema),
 });
 export type Schema = z.infer<typeof SchemaSchema>;

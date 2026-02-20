@@ -11,15 +11,19 @@ const model = defineModel<SchemaDetails>({ required: true });
 <template>
   <UForm :schema="SchemaDetailsSchema" nested class="flex flex-col gap-8">
     <HorizontalFormField
-      label="Title" description="Provide a title for your schema that's easily identifiable."
-      required name="title"
+      label="Title"
+      description="Provide a title for your schema that's easily identifiable."
+      required
+      name="title"
     >
       <UInput v-model="model.title" class="w-full" />
     </HorizontalFormField>
     <USeparator />
     <HorizontalFormField
       label="Description"
-      description="Provide a description for your schema that outlines what it's for." required name="description"
+      description="Provide a description for your schema that outlines what it's for."
+      required
+      name="description"
     >
       <UTextarea v-model="model.description" autoresize class="w-full" />
     </HorizontalFormField>

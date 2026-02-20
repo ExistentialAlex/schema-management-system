@@ -36,7 +36,7 @@ export const useSchemaService = (c: Context<ServerEnv>) => {
   const reqID = c.get('requestId');
 
   const getSchema = (id: number): Schema => {
-    log(`Getting Schema with ID '${id}'`, reqID);
+    log(reqID, `Getting Schema with ID '${id}'`);
 
     if (id === 999) {
       throw new SchemaGetException(c, { id });
@@ -47,7 +47,7 @@ export const useSchemaService = (c: Context<ServerEnv>) => {
       throw new SchemaNotFoundException(c, { id });
     }
 
-    log(`Schema Found`, reqID);
+    log(reqID, `Schema Found`);
 
     return schema;
   };
@@ -113,7 +113,7 @@ export const useSchemaService = (c: Context<ServerEnv>) => {
   };
 
   const updateSchema = (id: number, schema: UpdateSchemaRequestBody): Schema => {
-    log(`Updating schema with ID '${id}'`, reqID);
+    log(reqID, `Updating schema with ID '${id}'`);
 
     const existingSchema = getSchema(id);
     const updatedSchema = { ...existingSchema, ...schema };
@@ -125,7 +125,7 @@ export const useSchemaService = (c: Context<ServerEnv>) => {
   };
 
   const updateSchemaVersion = (id: number, version: string, schemaVersion: UpdateSchemaVersionRequestBody): SchemaVersion => {
-    log(`Updating schema with ID '${id}', version '${version}'`, reqID);
+    log(reqID, `Updating schema with ID '${id}', version '${version}'`);
 
     const existingSchemaVersion = getSchemaVersion(id, version);
     const updatedSchemaVersion = { ...existingSchemaVersion, ...schemaVersion };

@@ -23,7 +23,6 @@ const router = useRouter();
 const model = reactive<CreateSchemaRequestBody>({
   title: '',
   description: '',
-  draft: false,
   properties: [],
 });
 
@@ -38,12 +37,20 @@ const onSubmit = async () => {
 
   router.push('/');
 };
+
+const addProperty = () => {
+  model.properties.push({
+    name: '',
+    required: false,
+    type: [],
+  });
+};
 </script>
 
 <template>
   <BuilderTemplate :title="t('app.pages.schemas.create.title')" back-to="/schemas" data-testid="schema-form">
     <template #body>
-      <UForm id="schema-form" :state="model" :schema="CreateSchemaRequestBodySchema" @submit="onSubmit">
+      <UForm id="schema-form" :state="model" :schema="CreateSchemaRequestBodySchema" @error="console.log" @submit="onSubmit">
         <FormCardHeader
           :title="t('app.pages.users.create.form.title')"
           :description="t('app.pages.users.create.form.description')"
@@ -53,6 +60,9 @@ const onSubmit = async () => {
         </UPageCard>
         <UPageCard variant="subtle" class="mb-8">
           <SchemaPropertyForm v-model="model.properties" />
+          <UButton @click="addProperty">
+            Add Property
+          </UButton>
         </UPageCard>
       </UForm>
     </template>

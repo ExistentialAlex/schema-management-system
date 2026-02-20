@@ -264,6 +264,14 @@
       },
       "organisation": "Organisation is required"
     },
+    "SchemaSchema": {
+      "title": {
+        "min": "Title is required"
+      },
+      "description": {
+        "min": "Description is required"
+      }
+    },
     "UserSchema": {
       "name": {
         "min": "Name is required",

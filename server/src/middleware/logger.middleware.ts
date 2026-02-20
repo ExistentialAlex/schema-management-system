@@ -51,21 +51,21 @@ export const logger = (): MiddlewareHandler => {
     const headerLog = colorString(`┌─┤${reqID}├─┤${new Date().toISOString()}│`, 'info');
     addRawLogToRequest(reqID, headerLog);
 
-    logRequest(method, path, reqID);
+    logRequest(reqID, method, path);
 
     const start = Date.now();
 
     await next();
 
-    logResponse(method, path, c.res.status as StatusCode, time(start), reqID);
+    logResponse(reqID, method, path, c.res.status as StatusCode, time(start));
 
     // If an error was thrown, we want to log it for traceability.
     if (c.error) {
       logError(
+        reqID,
         method,
         path,
         c.res.status as StatusCode,
-        reqID,
         `"${c.error.message}"`,
         c.error.cause ? JSON.stringify(c.error.cause) : '',
       );
