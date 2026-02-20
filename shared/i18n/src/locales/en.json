@@ -231,6 +231,15 @@
         "create": "An error occurred while creating the user, please try again or contact support.",
         "update": "An error occurred while updating the user with ID '{id}', please try again or contact support.",
         "delete": "An error occurred while deleting the user with ID '{id}', please try again or contact support."
+      },
+      "schemas": {
+        "list": "An error occurred getting the schemas, please try again or contact support.",
+        "get": "An error occurred while getting schema with ID '{id}', please try again or contact support.",
+        "schema-not-found": "schema with ID '{id}' not found.",
+        "schema-version-not-found": "schema with ID '{id}' not found.",
+        "create": "An error occurred while creating the schema, please try again or contact support.",
+        "update": "An error occurred while updating the schema with ID '{id}', please try again or contact support.",
+        "delete": "An error occurred while deleting the schema with ID '{id}', please try again or contact support."
       }
     },
     "session": {

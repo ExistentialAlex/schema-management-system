@@ -23,9 +23,5 @@ const model = defineModel<SchemaDetails>({ required: true });
     >
       <UTextarea v-model="model.description" autoresize class="w-full" />
     </HorizontalFormField>
-    <USeparator />
-    <HorizontalFormField label="Draft" description="Is this a draft?" required name="draft">
-      <USwitch v-model="model.draft" />
-    </HorizontalFormField>
   </UForm>
 </template>
