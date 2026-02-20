@@ -1,5 +1,4 @@
 import antfu from '@antfu/eslint-config';
-import unusedImports from 'eslint-plugin-unused-imports';
 import type { FlatConfigComposer } from 'eslint-flat-config-utils';
 
 /**
@@ -47,6 +46,9 @@ export function createConfig(options: SharedConfigOptions = {}): FlatConfigCompo
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'no-debugger': 'warn',
       'style/member-delimiter-style': ['error', { multiline: { delimiter: 'semi', requireLast: true }, singleline: { 'delimiter': 'semi', requireLast: false } }],
+      'ts/no-explicit-any': ['error'],
+      'func-style': ['error', 'expression'],
+      'unused-imports/no-unused-imports': ['error']
     },
   });
 }
