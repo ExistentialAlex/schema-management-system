@@ -13,7 +13,7 @@ import { usePagination, useTable } from '@/composables';
 definePage({
   name: 'schema-list',
   meta: {
-    title: 'app.schemas.titles.list',
+    title: 'app.pages.schemas.list.title',
     requiresAuth: true,
     layout: 'default',
   },

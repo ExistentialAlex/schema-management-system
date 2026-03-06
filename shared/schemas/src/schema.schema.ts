@@ -36,6 +36,8 @@ export const SchemaVersionSchema = z.object({
   id: SemverStringSchema,
   schemaId: z.number(),
   draft: z.boolean(),
+  createdDate: z.iso.datetime(),
+  updatedDate: z.iso.datetime().optional(),
   properties: z.array(SchemaPropertySchema),
 });
 export type SchemaVersion = z.infer<typeof SchemaVersionSchema>;
@@ -55,13 +57,15 @@ export const SchemaSchema = z.object({
       },
     }),
   versions: z.array(SchemaVersionSchema),
+  createdDate: z.iso.datetime(),
+  updatedDate: z.iso.datetime().optional(),
 });
 export type Schema = z.infer<typeof SchemaSchema>;
 
 export const CreateSchemaVersionRequestBodySchema = SchemaVersionSchema.omit({ id: true, schemaId: true });
 export type CreateSchemaVersionRequestBody = z.infer<typeof CreateSchemaVersionRequestBodySchema>;
 
-export const CreateSchemaRequestBodySchema = SchemaSchema.omit({ id: true, versions: true }).extend({ properties: z.array(SchemaPropertySchema) });
+export const CreateSchemaRequestBodySchema = SchemaSchema.omit({ id: true, versions: true, createdDate: true }).extend({ properties: z.array(SchemaPropertySchema) });
 export type CreateSchemaRequestBody = z.infer<typeof CreateSchemaRequestBodySchema>;
 
 export const UpdateSchemaVersionRequestBodySchema = CreateSchemaVersionRequestBodySchema;
@@ -71,12 +75,12 @@ export const UpdateSchemaRequestBodySchema = SchemaSchema.omit({ id: true, versi
 export type UpdateSchemaRequestBody = z.infer<typeof UpdateSchemaRequestBodySchema>;
 
 export const GetSchemaRequestParamSchema = z.strictObject({
-  id: z.number(),
+  id: z.coerce.number(),
 });
 export type GetSchemaRequestParam = z.infer<typeof GetSchemaRequestParamSchema>;
 
 export const GetSchemaVersionRequestParamSchema = z.strictObject({
-  id: z.number(),
+  id: z.coerce.number(),
   version: SemverStringSchema,
 });
 export type GetSchemaVersionRequestParam = z.infer<typeof GetSchemaVersionRequestParamSchema>;

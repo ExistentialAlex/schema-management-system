@@ -18,6 +18,7 @@ let schemas: Schema[] = [
     id: 1,
     title: `Test Schema`,
     description: `Dummy Schema`,
+    createdDate: new Date(Date.now()).toISOString(),
     versions: [],
   },
 ];
@@ -29,6 +30,7 @@ for (let i = 0; i < 25; i++) {
     id: i + 2,
     title: `Schema ${i + 1}`,
     description: `Dummy Schema ${i + 1}`,
+    createdDate: new Date(Date.now()).toISOString(),
     versions: [],
   });
 }
@@ -102,13 +104,14 @@ export const useSchemaService = (c: Context<ServerEnv>) => {
       id: schemas.length + 1,
       title: schema.title,
       description: schema.description,
+      createdDate: new Date(Date.now()).toISOString(),
       versions: [],
     };
     schemas.push(newSchema);
 
     log(reqID, 'New schema created');
 
-    createSchemaVersion(newSchema.id, { draft: true, properties: schema.properties });
+    createSchemaVersion(newSchema.id, { draft: true, properties: schema.properties, createdDate: new Date(Date.now()).toISOString() });
 
     return newSchema;
   };

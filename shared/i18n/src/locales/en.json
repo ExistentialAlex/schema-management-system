@@ -146,6 +146,21 @@
             "description": "Add some details about your schema below.",
             "submit": "Create"
           }
+        },
+        "view": {
+          "title": "View Schema",
+          "header": "{name}",
+          "version-table": {
+            "title": "Versions",
+            "columns": {
+              "id": "Version",
+              "draft": "Draft",
+              "created-date": "Created",
+              "updated-date": "Last Updated"
+            },
+            "add-version": "Add Version",
+            "empty": "No Versions Created"
+          }
         }
       }
     },

@@ -51,6 +51,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    'view-json-schema': RouteRecordInfo<
+      'view-json-schema',
+      '/schemas/:id',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
+      | never
+    >,
     'create-json-schema': RouteRecordInfo<
       'create-json-schema',
       '/schemas/create',
@@ -113,6 +120,12 @@ declare module 'vue-router/auto-routes' {
     'src/pages/schemas/index.vue': {
       routes:
         | 'schema-list'
+      views:
+        | never
+    }
+    'src/pages/schemas/[id]/index.vue': {
+      routes:
+        | 'view-json-schema'
       views:
         | never
     }
