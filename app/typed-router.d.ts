@@ -44,9 +44,16 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    'schema-list': RouteRecordInfo<
+      'schema-list',
+      '/schemas',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     'create-json-schema': RouteRecordInfo<
       'create-json-schema',
-      '/schema/create',
+      '/schemas/create',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -103,7 +110,13 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'src/pages/schema/create.vue': {
+    'src/pages/schemas/index.vue': {
+      routes:
+        | 'schema-list'
+      views:
+        | never
+    }
+    'src/pages/schemas/create.vue': {
       routes:
         | 'create-json-schema'
       views:

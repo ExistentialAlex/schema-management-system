@@ -19,6 +19,12 @@ export const useSidebar = () => {
         icon: 'i-lucide-layout-dashboard',
       },
       {
+        value: 'schemas',
+        label: t('app.sidebar.schemas'),
+        to: '/schemas',
+        icon: 'i-lucide-file-text',
+      },
+      {
         value: 'users',
         label: t('app.sidebar.users'),
         to: '/users',

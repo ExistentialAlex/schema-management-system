@@ -35,7 +35,7 @@ const onSubmit = async () => {
     return;
   }
 
-  router.push('/');
+  router.push('/schemas');
 };
 
 const addProperty = () => {
@@ -48,7 +48,7 @@ const addProperty = () => {
 </script>
 
 <template>
-  <BuilderTemplate :title="t('app.pages.schemas.create.title')" back-to="/schemas" data-testid="schema-form">
+  <BuilderTemplate :title="t('app.pages.schemas.create.title')" back-to="/schema" data-testid="schema-form">
     <template #body>
       <UForm id="schema-form" :state="model" :schema="CreateSchemaRequestBodySchema" @error="console.log" @submit="onSubmit">
         <FormCardHeader

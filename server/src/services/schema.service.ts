@@ -9,8 +9,9 @@ import type {
   UpdateSchemaRequestBody,
   UpdateSchemaVersionRequestBody,
 } from 'schema-manager-schemas';
+import { getHighestVersion, incrementPatch } from 'schema-manager-utils';
 import { SchemaGetException, SchemaNotFoundException, SchemaVersionNotFoundException } from '@/exceptions';
-import { convertExternalPaginationResponse, getHighestVersion, incrementPatch, log, paginate } from '../utils';
+import { convertExternalPaginationResponse, log, paginate } from '../utils';
 
 let schemas: Schema[] = [
   {

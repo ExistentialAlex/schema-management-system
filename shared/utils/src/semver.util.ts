@@ -66,5 +66,5 @@ export const getHighestVersion = (versions: string[]): string => {
     }
 
     return currPatch > highPatch ? current : highest;
-  });
+  }, '0.0.0');
 };

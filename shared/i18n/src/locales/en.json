@@ -4,6 +4,7 @@
     "sidebar": {
       "dashboard": "Dashboard",
       "system": "System",
+      "schemas": "Schemas",
       "users": "Users",
       "signOut": "Sign Out",
       "appearance": {
@@ -124,6 +125,20 @@
         }
       },
       "schemas": {
+        "list": {
+          "create": "Create Schema",
+          "title": "Schemas",
+          "addSchemaButton": "Add Schema",
+          "columns": {
+            "title": "Title",
+            "latest-version": "Latest Version",
+            "number-of-versions": "No. of Versions"
+          },
+          "actions": {
+            "title": "Actions",
+            "edit": "Edit"
+          }
+        },
         "create": {
           "title": "Create Schema",
           "form": {
