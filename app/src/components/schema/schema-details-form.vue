@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type z from 'zod';
 import { CreateSchemaRequestBodySchema } from 'schema-manager-schemas';
+import z from 'zod';
 
-const SchemaDetailsSchema = CreateSchemaRequestBodySchema.omit({ properties: true }).partial();
+const SchemaDetailsSchema = z.object(CreateSchemaRequestBodySchema.shape).omit({ properties: true }).partial();
 type SchemaDetails = z.infer<typeof SchemaDetailsSchema>;
 
 const model = defineModel<SchemaDetails>({ required: true });

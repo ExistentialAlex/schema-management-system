@@ -38,7 +38,7 @@ const router = useRouter();
       </UDashboardNavbar>
     </template>
     <template #body>
-      <div class="mx-auto flex w-full flex-col gap-4 sm:gap-6 lg:max-w-2xl lg:gap-12">
+      <div class="mx-auto flex w-full flex-col gap-4 sm:gap-6 lg:max-w-2xl lg:gap-12 2xl:max-w-4xl">
         <slot name="body"></slot>
       </div>
     </template>

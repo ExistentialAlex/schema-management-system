@@ -23,7 +23,11 @@ const router = useRouter();
 const model = reactive<CreateSchemaRequestBody>({
   title: '',
   description: '',
-  properties: [],
+  properties: [{
+    name: '',
+    required: false,
+    type: [],
+  }],
 });
 
 const { mutateAsync: createSchema } = useCreateSchema();
@@ -50,7 +54,10 @@ const addProperty = () => {
 <template>
   <BuilderTemplate :title="t('app.pages.schemas.create.title')" back-to="/schema" data-testid="schema-form">
     <template #body>
-      <UForm id="schema-form" :state="model" :schema="CreateSchemaRequestBodySchema" @error="console.log" @submit="onSubmit">
+      <UForm
+        id="schema-form" :state="model" :schema="CreateSchemaRequestBodySchema" @error="console.log"
+        @submit="onSubmit"
+      >
         <FormCardHeader
           :title="t('app.pages.users.create.form.title')"
           :description="t('app.pages.users.create.form.description')"
@@ -58,9 +65,13 @@ const addProperty = () => {
         <UPageCard variant="subtle" class="mb-8">
           <SchemaDetailsForm v-model="model" />
         </UPageCard>
-        <UPageCard variant="subtle" class="mb-8">
+        <FormCardHeader
+          title="Schema Properties"
+          description="Add properties to your schema."
+        />
+        <UPageCard variant="subtle" class="mb-8 w-full">
           <SchemaPropertyForm v-model="model.properties" />
-          <UButton @click="addProperty">
+          <UButton class="w-fit" icon="i-lucide-plus" @click="addProperty">
             Add Property
           </UButton>
         </UPageCard>

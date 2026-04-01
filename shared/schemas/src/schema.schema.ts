@@ -6,10 +6,10 @@ import { isRegex } from './utils/regex';
 export const SimplePropertyTypeSchema = z.enum(['array', 'boolean', 'integer', 'null', 'number', 'string']);
 export type SimplePropertyType = z.infer<typeof SimplePropertyTypeSchema>;
 
-export const SchemaPropertySchema = z.strictObject({
-  name: z.string(),
+export const SchemaPropertySchema = z.object({
+  name: z.string().min(1, 'Name is Required'),
   description: z.string().optional(),
-  type: z.array(z.union([SimplePropertyTypeSchema, z.string()])),
+  type: z.array(z.union([SimplePropertyTypeSchema, z.string()])).min(1, 'Select at least one type'),
   required: z.boolean(),
   dependsOn: UniqueStringArraySchema.optional(),
 
@@ -31,6 +31,30 @@ export type SchemaProperty = z.infer<typeof SchemaPropertySchema>;
 
 export const SemverStringSchema = z.string().regex(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-z-][0-9a-z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-z-][0-9a-z-]*))*))?(?:\+([0-9a-z-]+(?:\.[0-9a-z-]+)*))?$/gim);
 export type SemverString = z.infer<typeof SemverStringSchema>;
+
+/**
+ * Check that the names of all schema properties are unique.
+ * @param v The object with properties.
+ * @param ctx The Zod context.
+ */
+const propertyNamesUnique = <T extends { properties: SchemaProperty[] }>(v: T, ctx: z.core.$RefinementCtx<T>) => {
+  const seenNames = new Map<string, number>();
+
+  for (let i = 0; i < v.properties.length; i++) {
+    const name = v.properties[i].name;
+
+    if (seenNames.has(name)) {
+      ctx.addIssue({
+        path: ['properties', i, 'name'],
+        message: 'Property name must be unique',
+        code: 'custom',
+      });
+      continue;
+    }
+
+    seenNames.set(name, i);
+  }
+};
 
 export const SchemaVersionSchema = z.object({
   id: SemverStringSchema,
@@ -65,7 +89,7 @@ export type Schema = z.infer<typeof SchemaSchema>;
 export const CreateSchemaVersionRequestBodySchema = SchemaVersionSchema.omit({ id: true, schemaId: true });
 export type CreateSchemaVersionRequestBody = z.infer<typeof CreateSchemaVersionRequestBodySchema>;
 
-export const CreateSchemaRequestBodySchema = SchemaSchema.omit({ id: true, versions: true, createdDate: true }).extend({ properties: z.array(SchemaPropertySchema) });
+export const CreateSchemaRequestBodySchema = SchemaSchema.omit({ id: true, versions: true, createdDate: true }).extend({ properties: z.array(SchemaPropertySchema) }).superRefine(propertyNamesUnique);
 export type CreateSchemaRequestBody = z.infer<typeof CreateSchemaRequestBodySchema>;
 
 export const UpdateSchemaVersionRequestBodySchema = CreateSchemaVersionRequestBodySchema;
