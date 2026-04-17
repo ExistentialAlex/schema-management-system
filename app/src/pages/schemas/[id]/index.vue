@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui';
 import type { SchemaVersion } from 'schema-manager-schemas';
+import { sortVersions } from 'schema-manager-utils';
 import { definePage } from 'unplugin-vue-router/runtime';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -49,7 +50,7 @@ const versionColumns = computed<TableColumn<SchemaVersion>[]>(() => [
 </script>
 
 <template>
-  <DefaultTemplate :title="t('pages.schemas.view.header', { name: state.data?.title || '' })">
+  <DefaultTemplate :title="t('app.pages.schemas.view.header', { name: state.data?.title || '' })">
     <template #body>
       <div v-if="state.status !== 'success'">
         <USkeleton class="h-10" />
@@ -80,7 +81,7 @@ const versionColumns = computed<TableColumn<SchemaVersion>[]>(() => [
             </div>
           </template>
           <template #default>
-            <UTable :data="state.data.versions" :columns="versionColumns" :empty="t('app.pages.schemas.view.version-table.empty')" />
+            <UTable :data="sortVersions(state.data.versions)" :columns="versionColumns" :empty="t('app.pages.schemas.view.version-table.empty')" />
           </template>
         </UCard>
       </div>

@@ -58,8 +58,8 @@ declare module 'vue-router/auto-routes' {
       { id: ParamValue<false> },
       | never
     >,
-    '/schemas/[id]/create-version': RouteRecordInfo<
-      '/schemas/[id]/create-version',
+    'create-json-schema-version': RouteRecordInfo<
+      'create-json-schema-version',
       '/schemas/:id/create-version',
       { id: ParamValue<true> },
       { id: ParamValue<false> },
@@ -138,7 +138,7 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/schemas/[id]/create-version.vue': {
       routes:
-        | '/schemas/[id]/create-version'
+        | 'create-json-schema-version'
       views:
         | never
     }

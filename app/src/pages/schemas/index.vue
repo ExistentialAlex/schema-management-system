@@ -2,7 +2,7 @@
 import type { DropdownMenuItem, TableColumn } from '@nuxt/ui';
 import type { Row } from '@tanstack/vue-table';
 import type { PaginationQuery, Schema } from 'schema-manager-schemas';
-import { getHighestVersion } from 'schema-manager-utils';
+import { getLatestVersionNumber } from 'schema-manager-utils';
 import { definePage } from 'unplugin-vue-router/runtime';
 import { h, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -50,7 +50,7 @@ const columns: TableColumn<Schema>[] = [
   {
     id: 'latest-version',
     header: () => t('app.pages.schemas.list.columns.latest-version'),
-    cell: ({ row }) => h('p', getHighestVersion(row.original.versions.map((v) => v.id))),
+    cell: ({ row }) => h('p', getLatestVersionNumber(row.original.versions)),
   },
   {
     id: 'versions',

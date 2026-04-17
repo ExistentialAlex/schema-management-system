@@ -1,3 +1,5 @@
+import type { SchemaVersion } from 'schema-manager-schemas';
+
 /**
  * Increments a semantic version based on the specified increment type.
  * @param version - The current semantic version string (e.g., "1.2.3")
@@ -48,23 +50,52 @@ export const incrementPatch = (version: string): string =>
   incrementVersion(version, 'patch');
 
 /**
- * Finds the highest semver version from a list of schema versions.
- * @param versions - Array of schema versions
- * @returns The highest semver version string, or an empty string if the array is empty
+ * Sort an array of Schema versions by their version number.
+ * @param versions - The versions to sort.
+ * @param dir - The direction to sort the versions.
+ * @returns The sorted versions
  */
-export const getHighestVersion = (versions: string[]): string => {
-  return versions.reduce((highest, current) => {
-    const [highMajor, highMinor, highPatch] = highest.split('.').map((part) => Number.parseInt(part, 10));
-    const [currMajor, currMinor, currPatch] = current.split('.').map((part) => Number.parseInt(part, 10));
+export const sortVersions = (versions: SchemaVersion[], dir: 'asc' | 'desc' = 'desc'): SchemaVersion[] => {
+  const sortedDesc = versions.sort((highest, current) => {
+    const [highMajor, highMinor, highPatch] = highest.id.split('.').map((part) => Number.parseInt(part, 10));
+    const [currMajor, currMinor, currPatch] = current.id.split('.').map((part) => Number.parseInt(part, 10));
 
     if (currMajor !== highMajor) {
-      return currMajor > highMajor ? current : highest;
+      return currMajor > highMajor ? 1 : -1;
     }
 
     if (currMinor !== highMinor) {
-      return currMinor > highMinor ? current : highest;
+      return currMinor > highMinor ? 1 : -1;
     }
 
-    return currPatch > highPatch ? current : highest;
-  }, '0.0.0');
+    return currPatch > highPatch ? 1 : -1;
+  });
+
+  if (dir === 'desc') {
+    return sortedDesc;
+  }
+
+  return sortedDesc.reverse();
+};
+
+/**
+ * Finds the latest schema version from a list of schema versions
+ * @param versions - Array of Schema Versions
+ * @returns The latest schema version in the array.
+ */
+export const getLatestVersion = (versions: SchemaVersion[]): SchemaVersion | undefined => {
+  if (versions.length === 0) {
+    return undefined;
+  }
+
+  return sortVersions(versions)[0];
+};
+
+/**
+ * Finds the latest semver version number from a list of schema versions.
+ * @param versions - Array of schema version numbers
+ * @returns The highest semver version number, or 0.0.0 if the array is empty.
+ */
+export const getLatestVersionNumber = (versions: SchemaVersion[]): string => {
+  return getLatestVersion(versions)?.id || '0.0.0';
 };

@@ -11,7 +11,7 @@ import { useCreateSchema } from '@/composables/schemas/useCreateSchema';
 definePage({
   name: 'create-json-schema',
   meta: {
-    title: 'app.pages.users.create.title',
+    title: 'app.pages.schemas.create.title',
     requiresAuth: true,
     layout: 'default',
   },
@@ -33,13 +33,13 @@ const model = reactive<CreateSchemaRequestBody>({
 const { mutateAsync: createSchema } = useCreateSchema();
 
 const onSubmit = async () => {
-  const [err] = await doublet(createSchema, model);
+  const [err, res] = await doublet(createSchema, model);
 
   if (err) {
     return;
   }
 
-  router.push('/schemas');
+  router.push({ name: 'view-json-schema', params: { id: res.id } });
 };
 
 const addProperty = () => {

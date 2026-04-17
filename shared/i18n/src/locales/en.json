@@ -147,6 +147,9 @@
             "submit": "Create"
           }
         },
+        "create-version": {
+          "title": "Create Schema Version"
+        },
         "view": {
           "title": "View Schema",
           "header": "{name}",
@@ -218,6 +221,17 @@
             },
             "onError": {
               "title": "Error Creating Schema"
+            }
+          }
+        },
+        "useCreateSchemaVersion": {
+          "toasts": {
+            "onSuccess": {
+              "title": "Schema version created",
+              "description": "Schema version '{version}' has been created successfully."
+            },
+            "onError": {
+              "title": "Error creating new schema version"
             }
           }
         }

@@ -9,7 +9,7 @@ import type {
   UpdateSchemaRequestBody,
   UpdateSchemaVersionRequestBody,
 } from 'schema-manager-schemas';
-import { getHighestVersion, incrementPatch } from 'schema-manager-utils';
+import { getLatestVersionNumber, incrementPatch } from 'schema-manager-utils';
 import { SchemaGetException, SchemaNotFoundException, SchemaVersionNotFoundException } from '@/exceptions';
 import { convertExternalPaginationResponse, log, paginate } from '../utils';
 
@@ -81,11 +81,12 @@ export const useSchemaService = (c: Context<ServerEnv>) => {
 
     const schema = getSchema(schemaId);
 
-    const newVersionId = schema.versions.length ? incrementPatch(getHighestVersion(schema.versions.map((v) => v.id))) : '0.0.0';
+    const newVersionId = schema.versions.length ? incrementPatch(getLatestVersionNumber(schema.versions)) : '0.0.0';
 
-    const newSchemaVersion = {
+    const newSchemaVersion: SchemaVersion = {
       id: newVersionId,
       schemaId,
+      createdDate: new Date(Date.now()).toISOString(),
       ...schemaVersion,
     };
 
@@ -111,7 +112,7 @@ export const useSchemaService = (c: Context<ServerEnv>) => {
 
     log(reqID, 'New schema created');
 
-    createSchemaVersion(newSchema.id, { draft: true, properties: schema.properties, createdDate: new Date(Date.now()).toISOString() });
+    createSchemaVersion(newSchema.id, { draft: true, properties: schema.properties });
 
     return newSchema;
   };

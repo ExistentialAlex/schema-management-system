@@ -86,7 +86,7 @@ export const SchemaSchema = z.object({
 });
 export type Schema = z.infer<typeof SchemaSchema>;
 
-export const CreateSchemaVersionRequestBodySchema = SchemaVersionSchema.omit({ id: true, schemaId: true });
+export const CreateSchemaVersionRequestBodySchema = SchemaVersionSchema.omit({ id: true, schemaId: true, createdDate: true, updatedDate: true });
 export type CreateSchemaVersionRequestBody = z.infer<typeof CreateSchemaVersionRequestBodySchema>;
 
 export const CreateSchemaRequestBodySchema = SchemaSchema.omit({ id: true, versions: true, createdDate: true }).extend({ properties: z.array(SchemaPropertySchema) }).superRefine(propertyNamesUnique);
