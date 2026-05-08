@@ -63,7 +63,7 @@ const columns = computed<TableColumn<SchemaProperty>[]>(() => [
     cell: ({ row }) => h(
       UFormField,
       { name: `properties.${row.index}.type`, class: 'flex-1', ui: { error: 'whitespace-pre-line' } },
-      () => h(USelectMenu, { 'multiple': true, 'placeholder': 'Select a Type', 'items': items.value, 'modelValue': row.original.type, 'onUpdate:modelValue': (v: string[]) => {
+      () => h(USelectMenu, { 'multiple': true, 'placeholder': 'Select a Type', 'items': items.value, 'modelValue': row.original.type, 'ui': '{ content: "min-w-fit" }', 'onUpdate:modelValue': (v: string[]) => {
         model.value[row.index]!.type = v;
         row.toggleExpanded(true);
       } }),
@@ -97,7 +97,7 @@ const columns = computed<TableColumn<SchemaProperty>[]>(() => [
     class="flex-1 bg-default rounded-lg overflow-hidden border border-muted"
   >
     <template #expanded="{ row }">
-      <div class="py-2">
+      <div class="py-2 flex flex-col gap-4">
         <h2 v-if="!row.original.type.length" class="text-center">
           Select a type to customise property
         </h2>
@@ -108,6 +108,12 @@ const columns = computed<TableColumn<SchemaProperty>[]>(() => [
           v-if="row.original.type.includes(SimplePropertyTypeSchema.enum.string)"
           v-model="model[row.index] as SchemaProperty"
           :index="row.index"
+        />
+        <NumberValidationForm
+          v-if="row.original.type.includes(SimplePropertyTypeSchema.enum.number) || row.original.type.includes(SimplePropertyTypeSchema.enum.integer)"
+          v-model="model[row.index] as SchemaProperty"
+          :index="row.index"
+          :is-integer="row.original.type.includes(SimplePropertyTypeSchema.enum.integer)"
         />
       </div>
     </template>

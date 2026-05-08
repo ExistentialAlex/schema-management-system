@@ -27,10 +27,11 @@ const model = reactive<CreateSchemaVersionRequestBody>({
   properties: [],
 });
 
-const { refresh, state } = useGetSchema(route.params.id);
+const { refresh, state } = useGetSchema(route.params.id, { enabled: false });
 const { mutateAsync: createSchemaVersion } = useCreateSchemaVersion();
 
 const latestVersion = computed(() => state.value.data?.versions ? getLatestVersion(state.value.data.versions) : undefined);
+const title = computed(() => latestVersion.value ? `${latestVersion.value.id} -> New Version` : 'New Version');
 
 onMounted(async () => {
   const res = await refresh();
@@ -74,7 +75,7 @@ const addProperty = () => {
         @submit="onSubmit"
       >
         <FormCardHeader
-          :title="`${latestVersion?.id} -> New Version`"
+          :title="title"
           description="Details of your new schema version"
         />
         <UPageCard variant="subtle" class="mb-8 w-full">

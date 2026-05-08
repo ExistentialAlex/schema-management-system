@@ -9,15 +9,18 @@ export type SimplePropertyType = z.infer<typeof SimplePropertyTypeSchema>;
 export const SchemaPropertySchema = z.object({
   name: z.string().min(1, 'Name is Required'),
   description: z.string().optional(),
-  type: z.array(z.union([SimplePropertyTypeSchema, z.string()])).min(1, 'Select at least one type'),
+  type: z.array(z.union([SimplePropertyTypeSchema, z.string()]))
+    .min(1, 'Select at least one type')
+    .refine((v) => !(v.includes(SimplePropertyTypeSchema.enum.integer) && v.includes(SimplePropertyTypeSchema.enum.number)), { error: 'A property cannot be both a number and integer' }),
   required: z.boolean(),
   dependsOn: UniqueStringArraySchema.optional(),
 
   // Number Validation
   minimum: z.number().optional(),
   maximum: z.number().optional(),
-  exclusiveMinimum: z.boolean().optional(),
-  exclusiveMaximum: z.boolean().optional(),
+  exclusiveMinimum: z.number().optional(),
+  exclusiveMaximum: z.number().optional(),
+  multipleOf: z.number().min(0).optional(),
 
   // String Validation
   pattern: isRegex(z.string()).optional(),
