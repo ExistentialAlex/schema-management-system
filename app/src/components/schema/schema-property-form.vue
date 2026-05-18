@@ -3,10 +3,20 @@ import type { TableColumn } from '@nuxt/ui';
 import type { SchemaProperty } from 'schema-manager-schemas';
 import { SimplePropertyTypeSchema } from 'schema-manager-schemas';
 import { computed, h, resolveComponent } from 'vue';
+import { useSearchSchemas } from '@/composables/schemas';
 
 const model = defineModel<SchemaProperty[]>({ required: true });
 
-const items = computed<string[]>(() => [...Object.values(SimplePropertyTypeSchema.enum)]);
+const { state, search } = useSearchSchemas();
+const items = computed<{ label: string; value: string }[]>(() => {
+  const types: { label: string; value: string }[] = Object.values(SimplePropertyTypeSchema.enum).map((t) => ({ label: t, value: t }));
+
+  if (state.value.status === 'success') {
+    types.push(...state.value.data.results.map((s) => ({ label: s.title, value: String(s.id) })));
+  }
+
+  return types;
+});
 
 const removeProperty = (index: number) => {
   model.value.splice(index, 1);
@@ -63,10 +73,22 @@ const columns = computed<TableColumn<SchemaProperty>[]>(() => [
     cell: ({ row }) => h(
       UFormField,
       { name: `properties.${row.index}.type`, class: 'flex-1', ui: { error: 'whitespace-pre-line' } },
-      () => h(USelectMenu, { 'multiple': true, 'placeholder': 'Select a Type', 'items': items.value, 'modelValue': row.original.type, 'ui': '{ content: "min-w-fit" }', 'onUpdate:modelValue': (v: string[]) => {
-        model.value[row.index]!.type = v;
-        row.toggleExpanded(true);
-      } }),
+      () => h(USelectMenu, {
+        'search-term': search.value,
+        'multiple': true,
+        'placeholder': 'Select a Type',
+        'items': items.value,
+        'ignore-filter': true,
+        'reset-search-term-on-select': false,
+        'reset-search-term-on-blur': false,
+        'modelValue': row.original.type,
+        'ui': '{ content: "min-w-fit" }',
+        'onUpdate:modelValue': (v: string[]) => {
+          model.value[row.index]!.type = v;
+          row.toggleExpanded(true);
+        },
+        'onUpdate:searchTerm': (v: string) => search.value = v,
+      }),
     ),
   },
   {
@@ -93,7 +115,8 @@ const columns = computed<TableColumn<SchemaProperty>[]>(() => [
 
 <template>
   <UTable
-    :data="model" :columns="columns" :ui="{ tr: 'data-[expanded=true]:bg-elevated/50', td: 'p-2 first:pl-4 last:pr-4' }"
+    :data="model" :columns="columns"
+    :ui="{ tr: 'data-[expanded=true]:bg-elevated/50', td: 'p-2 first:pl-4 last:pr-4' }"
     class="flex-1 bg-default rounded-lg overflow-hidden border border-muted"
   >
     <template #expanded="{ row }">
@@ -106,13 +129,11 @@ const columns = computed<TableColumn<SchemaProperty>[]>(() => [
         </p>
         <StringValidationForm
           v-if="row.original.type.includes(SimplePropertyTypeSchema.enum.string)"
-          v-model="model[row.index] as SchemaProperty"
-          :index="row.index"
+          v-model="model[row.index] as SchemaProperty" :index="row.index"
         />
         <NumberValidationForm
           v-if="row.original.type.includes(SimplePropertyTypeSchema.enum.number) || row.original.type.includes(SimplePropertyTypeSchema.enum.integer)"
-          v-model="model[row.index] as SchemaProperty"
-          :index="row.index"
+          v-model="model[row.index] as SchemaProperty" :index="row.index"
           :is-integer="row.original.type.includes(SimplePropertyTypeSchema.enum.integer)"
         />
       </div>
