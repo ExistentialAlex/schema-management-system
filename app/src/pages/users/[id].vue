@@ -56,9 +56,9 @@ watch(data, (data) => {
 });
 
 const form = useTemplateRef('form');
-const { mutateAsync: updateAttribute, status } = useUpdateUser();
+const { mutateAsync: updateUser, status } = useUpdateUser();
 const onSubmit = async () => {
-  await updateAttribute({ model: model.value, id: route.params.id });
+  await updateUser({ model: model.value, id: route.params.id });
 };
 
 const { shouldDiscardChanges } = useDiscardChanges(
