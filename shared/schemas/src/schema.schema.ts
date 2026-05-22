@@ -3,7 +3,7 @@ import { NonNegativeIntegerDefault0Schema, NonNegativeIntegerSchema, UniqueStrin
 import { min } from './utils';
 import { isRegex } from './utils/regex';
 
-export const SimplePropertyTypeSchema = z.enum(['array', 'boolean', 'integer', 'null', 'number', 'string']);
+export const SimplePropertyTypeSchema = z.enum(['array', 'boolean', 'integer', 'null', 'number', 'string', 'enum', 'const']);
 export type SimplePropertyType = z.infer<typeof SimplePropertyTypeSchema>;
 
 export const SchemaPropertySchema = z.object({
@@ -11,7 +11,9 @@ export const SchemaPropertySchema = z.object({
   description: z.string().optional(),
   type: z.array(z.union([SimplePropertyTypeSchema, z.string()]))
     .min(1, 'Select at least one type')
-    .refine((v) => !(v.includes(SimplePropertyTypeSchema.enum.integer) && v.includes(SimplePropertyTypeSchema.enum.number)), { error: 'A property cannot be both a number and integer' }),
+    .refine((v) => !(v.includes(SimplePropertyTypeSchema.enum.integer) && v.includes(SimplePropertyTypeSchema.enum.number)), { error: 'A property cannot be both a number and integer' })
+    .refine((v) => !(v.includes(SimplePropertyTypeSchema.enum.enum) && v.length > 1), { error: 'A property cannot be an enum and another type.' })
+    .refine((v) => !(v.includes(SimplePropertyTypeSchema.enum.const) && v.length > 1), { error: 'A property cannot be a constant and another type.' }),
   required: z.boolean(),
   dependsOn: UniqueStringArraySchema.optional(),
 
@@ -28,7 +30,20 @@ export const SchemaPropertySchema = z.object({
   minLength: NonNegativeIntegerDefault0Schema.optional(),
 
   // Array Validation
-  uniqueItems: z.boolean().optional(),
+  uniqueItems: z.boolean().optional(), // Whether all items in the array must be unique.
+  items: z.union([SimplePropertyTypeSchema, z.string(), z.boolean()]).optional(), // All unprefixed items in the array must be this type.
+  prefixItems: z.array(z.union([SimplePropertyTypeSchema, z.string()])).optional(), // Outline the types for the first n number of array properties
+  minItems: NonNegativeIntegerSchema.optional(), // The minimum number of items in the array.
+  maxItems: NonNegativeIntegerDefault0Schema.optional(), // The maximum number of items in the array.
+  contains: z.union([SimplePropertyTypeSchema, z.string()]).optional(), // The array must contain a value of this type.
+  minContains: NonNegativeIntegerSchema.optional(), // The array must contain at least n values of the type defined in `contains`
+  maxContains: NonNegativeIntegerDefault0Schema.optional(), // The array must contain at most n values of the type defined in `contains`
+
+  // Enum Validation
+  enum: z.array(z.object({ value: z.unknown(), type: z.union([SimplePropertyTypeSchema.exclude(['enum', 'const']), z.string()]) })).optional(),
+
+  // Constant Validation
+  const: z.object({ value: z.unknown(), type: z.union([SimplePropertyTypeSchema.exclude(['enum', 'const']), z.string()]) }).optional(),
 });
 export type SchemaProperty = z.infer<typeof SchemaPropertySchema>;
 
