@@ -18,6 +18,48 @@ const items = computed<{ label: string; value: string }[]>(() => {
   return types;
 });
 
+const removePropertyModifiers = (index: number) => {
+  const row = model.value[index];
+
+  if (!row) {
+    return;
+  }
+
+  if (!row.type.includes(SimplePropertyTypeSchema.enum.array)) {
+    delete row.contains;
+    delete row.uniqueItems;
+    delete row.items;
+    delete row.prefixItems;
+    delete row.minItems;
+    delete row.maxItems;
+    delete row.contains;
+    delete row.minContains;
+    delete row.maxContains;
+  }
+
+  if (!row.type.includes(SimplePropertyTypeSchema.enum.const)) {
+    delete row.const;
+  }
+
+  if (!row.type.includes(SimplePropertyTypeSchema.enum.enum)) {
+    delete row.enum;
+  }
+
+  if (!row.type.includes(SimplePropertyTypeSchema.enum.integer) && !row.type.includes(SimplePropertyTypeSchema.enum.number)) {
+    delete row.minimum;
+    delete row.maximum;
+    delete row.exclusiveMinimum;
+    delete row.exclusiveMaximum;
+    delete row.multipleOf;
+  }
+
+  if (!row.type.includes(SimplePropertyTypeSchema.enum.string)) {
+    delete row.pattern;
+    delete row.minLength;
+    delete row.maxLength;
+  }
+}
+
 const removeProperty = (index: number) => {
   model.value.splice(index, 1);
 };
@@ -81,10 +123,11 @@ const columns = computed<TableColumn<SchemaProperty>[]>(() => [
         'ignore-filter': true,
         'reset-search-term-on-select': false,
         'reset-search-term-on-blur': false,
-        'modelValue': row.original.type,
+        'modelValue': row.original.type.map(v => items.value.find((i => i.value === v))),
         'ui': '{ content: "min-w-fit" }',
-        'onUpdate:modelValue': (v: string[]) => {
-          model.value[row.index]!.type = v;
+        'onUpdate:modelValue': (v: { label: string, value: string }[]) => {
+          model.value[row.index]!.type = v.map(l => l.value);
+          removePropertyModifiers(row.index)
           row.toggleExpanded(true);
         },
         'onUpdate:searchTerm': (v: string) => search.value = v,
@@ -114,11 +157,9 @@ const columns = computed<TableColumn<SchemaProperty>[]>(() => [
 </script>
 
 <template>
-  <UTable
-    :data="model" :columns="columns"
+  <UTable :data="model" :columns="columns"
     :ui="{ tr: 'data-[expanded=true]:bg-elevated/50', td: 'p-2 first:pl-4 last:pr-4' }"
-    class="flex-1 bg-default rounded-lg overflow-hidden border border-muted"
-  >
+    class="flex-1 bg-default rounded-lg overflow-hidden border border-muted">
     <template #expanded="{ row }">
       <div class="py-2 flex flex-col gap-4">
         <h2 v-if="!row.original.type.length" class="text-center">
@@ -127,15 +168,12 @@ const columns = computed<TableColumn<SchemaProperty>[]>(() => [
         <p v-if="row.original.type.length === 1 && row.original.type.includes('null')" class="text-center">
           Null properties do not have any additional options.
         </p>
-        <StringValidationForm
-          v-if="row.original.type.includes(SimplePropertyTypeSchema.enum.string)"
-          v-model="model[row.index] as SchemaProperty" :index="row.index"
-        />
+        <StringValidationForm v-if="row.original.type.includes(SimplePropertyTypeSchema.enum.string)"
+          v-model="model[row.index] as SchemaProperty" :index="row.index" />
         <NumberValidationForm
           v-if="row.original.type.includes(SimplePropertyTypeSchema.enum.number) || row.original.type.includes(SimplePropertyTypeSchema.enum.integer)"
           v-model="model[row.index] as SchemaProperty" :index="row.index"
-          :is-integer="row.original.type.includes(SimplePropertyTypeSchema.enum.integer)"
-        />
+          :is-integer="row.original.type.includes(SimplePropertyTypeSchema.enum.integer)" />
       </div>
     </template>
   </UTable>
